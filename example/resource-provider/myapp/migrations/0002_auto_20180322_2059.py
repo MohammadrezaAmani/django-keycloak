@@ -4,32 +4,31 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('myapp', '0001_initial'),
+        ("myapp", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='exchangedtoken',
+            name="exchangedtoken",
             unique_together=set(),
         ),
         migrations.RemoveField(
-            model_name='exchangedtoken',
-            name='oidc_profile',
+            model_name="exchangedtoken",
+            name="oidc_profile",
         ),
         migrations.RemoveField(
-            model_name='exchangedtoken',
-            name='remote_client',
+            model_name="exchangedtoken",
+            name="remote_client",
         ),
         migrations.RemoveField(
-            model_name='remoteclient',
-            name='realm',
+            model_name="remoteclient",
+            name="realm",
         ),
         migrations.DeleteModel(
-            name='ExchangedToken',
+            name="ExchangedToken",
         ),
         migrations.DeleteModel(
-            name='RemoteClient',
+            name="RemoteClient",
         ),
     ]

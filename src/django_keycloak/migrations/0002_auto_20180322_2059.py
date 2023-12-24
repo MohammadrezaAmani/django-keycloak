@@ -5,50 +5,70 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('django_keycloak', '0001_initial'),
+        ("django_keycloak", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ExchangedToken',
+            name="ExchangedToken",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True,
-                                        serialize=False, verbose_name='ID')),
-                ('access_token', models.TextField(null=True)),
-                ('expires_before', models.DateTimeField(null=True)),
-                ('refresh_token', models.TextField(null=True)),
-                ('refresh_expires_before', models.DateTimeField(null=True)),
-                ('oidc_profile', models.ForeignKey(
-                    on_delete=django.db.models.deletion.CASCADE,
-                    to='django_keycloak.OpenIdConnectProfile')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("access_token", models.TextField(null=True)),
+                ("expires_before", models.DateTimeField(null=True)),
+                ("refresh_token", models.TextField(null=True)),
+                ("refresh_expires_before", models.DateTimeField(null=True)),
+                (
+                    "oidc_profile",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="django_keycloak.OpenIdConnectProfile",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='RemoteClient',
+            name="RemoteClient",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True,
-                                        serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('realm', models.ForeignKey(
-                    on_delete=django.db.models.deletion.CASCADE,
-                    related_name='remote_clients',
-                    to='django_keycloak.Realm'
-                )),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                (
+                    "realm",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="remote_clients",
+                        to="django_keycloak.Realm",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='exchangedtoken',
-            name='remote_client',
+            model_name="exchangedtoken",
+            name="remote_client",
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE,
-                related_name='exchanged_tokens',
-                to='django_keycloak.RemoteClient'
+                related_name="exchanged_tokens",
+                to="django_keycloak.RemoteClient",
             ),
         ),
         migrations.AlterUniqueTogether(
-            name='exchangedtoken',
-            unique_together={('oidc_profile', 'remote_client')},
+            name="exchangedtoken",
+            unique_together={("oidc_profile", "remote_client")},
         ),
     ]

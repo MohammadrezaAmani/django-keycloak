@@ -18,13 +18,12 @@ def get_realm_api_client(realm):
         # Keycloak think that we access it using the server_url.
         server_url = realm.server.internal_url
         parsed_url = urlparse(realm.server.url)
-        headers['Host'] = parsed_url.netloc
+        headers["Host"] = parsed_url.netloc
 
-        if parsed_url.scheme == 'https':
-            headers['X-Forwarded-Proto'] = 'https'
+        if parsed_url.scheme == "https":
+            headers["X-Forwarded-Proto"] = "https"
 
-    return KeycloakRealm(server_url=server_url, realm_name=realm.name,
-                         headers=headers)
+    return KeycloakRealm(server_url=server_url, realm_name=realm.name, headers=headers)
 
 
 def refresh_certs(realm):
@@ -33,7 +32,7 @@ def refresh_certs(realm):
     :rtype django_keycloak.models.Realm
     """
     realm.certs = realm.client.openid_api_client.certs()
-    realm.save(update_fields=['_certs'])
+    realm.save(update_fields=["_certs"])
     return realm
 
 
@@ -48,12 +47,11 @@ def refresh_well_known_oidc(realm):
 
     # While fetching the well_known we should not use the prepared URL
     openid_api_client = KeycloakRealm(
-        server_url=server_url,
-        realm_name=realm.name
-    ).open_id_connect(client_id='', client_secret='')
+        server_url=server_url, realm_name=realm.name
+    ).open_id_connect(client_id="", client_secret="")
 
     realm.well_known_oidc = openid_api_client.well_known.contents
-    realm.save(update_fields=['_well_known_oidc'])
+    realm.save(update_fields=["_well_known_oidc"])
     return realm
 
 
@@ -66,7 +64,7 @@ def get_issuer(realm):
     :return: issuer
     :rtype: str
     """
-    issuer = realm.well_known_oidc['issuer']
+    issuer = realm.well_known_oidc["issuer"]
     if realm.server.internal_url:
         return issuer.replace(realm.server.internal_url, realm.server.url, 1)
     return issuer

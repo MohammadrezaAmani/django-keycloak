@@ -1,5 +1,3 @@
-
-
 class KeycloakOpenIdProfileNotFound(Exception):
     pass
 

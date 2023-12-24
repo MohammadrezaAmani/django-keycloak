@@ -13,10 +13,7 @@ def synchronize_client(client):
     :type client: django_keycloak.models.Client
     """
     for app_config in apps.get_app_configs():
-        synchronize_resources(
-            client=client,
-            app_config=app_config
-        )
+        synchronize_resources(client=client, app_config=app_config)
 
 
 def synchronize_resources(client, app_config):
@@ -33,9 +30,7 @@ def synchronize_resources(client, app_config):
 
     uma1_client = client.uma1_api_client
 
-    access_token = django_keycloak.services.client.get_access_token(
-        client=client
-    )
+    access_token = django_keycloak.services.client.get_access_token(client=client)
 
     for klass in app_config.get_models():
         scopes = _get_all_permissions(klass._meta)
@@ -44,11 +39,10 @@ def synchronize_resources(client, app_config):
             uma1_client.resource_set_create(
                 token=access_token,
                 name=klass._meta.label_lower,
-                type='urn:{client}:resources:{model}'.format(
-                    client=slugify(client.client_id),
-                    model=klass._meta.label_lower
+                type="urn:{client}:resources:{model}".format(
+                    client=slugify(client.client_id), model=klass._meta.label_lower
                 ),
-                scopes=scopes
+                scopes=scopes,
             )
         except KeycloakClientError as e:
             if e.original_exc.response.status_code != 409:

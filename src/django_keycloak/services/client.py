@@ -19,10 +19,11 @@ def get_keycloak_id(client):
     :return:
     """
     keycloak_clients = client.admin_api_client.realms.by_name(
-        name=client.realm.name).clients.all()
+        name=client.realm.name
+    ).clients.all()
     for keycloak_client in keycloak_clients:
-        if keycloak_client['clientId'] == client.client_id:
-            return keycloak_client['id']
+        if keycloak_client["clientId"] == client.client_id:
+            return keycloak_client["id"]
 
     return None
 
@@ -41,8 +42,7 @@ def get_openid_client(client):
     :rtype: keycloak.openid_connect.KeycloakOpenidConnect
     """
     openid = client.realm.realm_api_client.open_id_connect(
-        client_id=client.client_id,
-        client_secret=client.secret
+        client_id=client.client_id, client_secret=client.secret
     )
 
     if client.realm._well_known_oidc:
@@ -84,12 +84,11 @@ def get_service_account_profile(client):
     token_response, initiate_time = get_new_access_token(client=client)
 
     oidc_profile = django_keycloak.services.oidc_profile._update_or_create(
-        client=client,
-        token_response=token_response,
-        initiate_time=initiate_time)
+        client=client, token_response=token_response, initiate_time=initiate_time
+    )
 
     client.service_account_profile = oidc_profile
-    client.save(update_fields=['service_account_profile'])
+    client.save(update_fields=["service_account_profile"])
 
     return oidc_profile
 
@@ -101,7 +100,7 @@ def get_new_access_token(client):
     :param django_keycloak.models.Client client:
     :rtype: str
     """
-    scope = 'realm-management openid'
+    scope = "realm-management openid"
 
     initiate_time = timezone.now()
     token_response = client.openid_api_client.client_credentials(scope=scope)
@@ -120,12 +119,13 @@ def get_access_token(client):
 
     try:
         return django_keycloak.services.oidc_profile.get_active_access_token(
-            oidc_profile=oidc_profile)
+            oidc_profile=oidc_profile
+        )
     except TokensExpired:
         token_reponse, initiate_time = get_new_access_token(client=client)
         oidc_profile = django_keycloak.services.oidc_profile.update_tokens(
             token_model=oidc_profile,
             token_response=token_reponse,
-            initiate_time=initiate_time
+            initiate_time=initiate_time,
         )
         return oidc_profile.access_token

@@ -15,16 +15,15 @@ def client(client_id):
     try:
         return Client.objects.get(client_id=client_id)
     except Client.DoesNotExist:
-        raise TypeError('Client does not exist')
+        raise TypeError("Client does not exist")
 
 
 class Command(BaseCommand):
-
     def add_arguments(self, parser):
-        parser.add_argument('--client', type=client, required=False)
+        parser.add_argument("--client", type=client, required=False)
 
     def handle(self, *args, **options):
-        client = options.get('client')
+        client = options.get("client")
 
         if client:
             django_keycloak.services.uma.synchronize_client(client=client)

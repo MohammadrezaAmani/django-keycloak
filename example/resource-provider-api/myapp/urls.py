@@ -20,7 +20,7 @@ from myapp import views
 
 
 urlpatterns = [
-    url(r'^api/end-point$', views.api_end_point),
-    url(r'^api/authenticated-end-point$', views.authenticated_end_point),
-    url(r'^admin/', admin.site.urls),
+    url(r"^api/end-point$", views.api_end_point),
+    url(r"^api/authenticated-end-point$", views.authenticated_end_point),
+    url(r"^admin/", admin.site.urls),
 ]

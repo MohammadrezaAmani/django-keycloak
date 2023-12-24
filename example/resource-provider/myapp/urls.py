@@ -20,9 +20,9 @@ from myapp import views
 
 
 urlpatterns = [
-    url(r'^$', views.Home.as_view(), name='index'),
-    url(r'^secured$', views.Secured.as_view(), name='secured'),
-    url(r'^permission$', views.Permission.as_view(), name='permission'),
-    url(r'^keycloak/', include('django_keycloak.urls')),
-    url(r'^admin/', admin.site.urls),
+    url(r"^$", views.Home.as_view(), name="index"),
+    url(r"^secured$", views.Secured.as_view(), name="secured"),
+    url(r"^permission$", views.Permission.as_view(), name="permission"),
+    url(r"^keycloak/", include("django_keycloak.urls")),
+    url(r"^admin/", admin.site.urls),
 ]

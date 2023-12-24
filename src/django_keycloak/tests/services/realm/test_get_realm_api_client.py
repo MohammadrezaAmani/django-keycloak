@@ -6,19 +6,11 @@ from django_keycloak.tests.mixins import MockTestCaseMixin
 import django_keycloak.services.realm
 
 
-class ServicesRealmGetRealmApiClientTestCase(
-        MockTestCaseMixin, TestCase):
-
+class ServicesRealmGetRealmApiClientTestCase(MockTestCaseMixin, TestCase):
     def setUp(self):
-        self.server = ServerFactory(
-            url='https://some-url',
-            internal_url=''
-        )
+        self.server = ServerFactory(url="https://some-url", internal_url="")
 
-        self.realm = RealmFactory(
-            server=self.server,
-            name='test-realm'
-        )
+        self.realm = RealmFactory(server=self.server, name="test-realm")
 
     def test_get_realm_api_client(self):
         """
@@ -27,8 +19,7 @@ class ServicesRealmGetRealmApiClientTestCase(
         Expected: a KeycloakRealm client is returned with settings based on the
         provided realm. The server_url in the client is the provided url.
         """
-        client = django_keycloak.services.realm.\
-            get_realm_api_client(realm=self.realm)
+        client = django_keycloak.services.realm.get_realm_api_client(realm=self.realm)
 
         self.assertEqual(client.server_url, self.server.url)
         self.assertEqual(client.realm_name, self.realm.name)
@@ -40,10 +31,9 @@ class ServicesRealmGetRealmApiClientTestCase(
         Expected: a KeycloakRealm client is returned with settings based on the
         provided realm. The server_url in the client is the provided url.
         """
-        self.server.internal_url = 'https://some-internal-url'
+        self.server.internal_url = "https://some-internal-url"
 
-        client = django_keycloak.services.realm.\
-            get_realm_api_client(realm=self.realm)
+        client = django_keycloak.services.realm.get_realm_api_client(realm=self.realm)
 
         self.assertEqual(client.server_url, self.server.internal_url)
         self.assertEqual(client.realm_name, self.realm.name)

@@ -11,11 +11,11 @@ class KeycloakRemoteUser(object):
     #django.contrib.auth.models.User
     """
 
-    username = ''
-    first_name = ''
-    last_name = ''
-    email = ''
-    password = ''
+    username = ""
+    first_name = ""
+    last_name = ""
+    email = ""
+    password = ""
     groups = []
     user_permissions = []
 
@@ -26,11 +26,11 @@ class KeycloakRemoteUser(object):
         Create KeycloakRemoteUser from userinfo and oidc_profile.
         :param dict userinfo: the userinfo as retrieved from the OIDC provider
         """
-        self.username = userinfo.get('preferred_username') or userinfo['sub']
-        self.email = userinfo.get('email', '')
-        self.first_name = userinfo.get('given_name', '')
-        self.last_name = userinfo.get('family_name', '')
-        self.sub = userinfo['sub']
+        self.username = userinfo.get("preferred_username") or userinfo["sub"]
+        self.email = userinfo.get("email", "")
+        self.first_name = userinfo.get("given_name", "")
+        self.last_name = userinfo.get("family_name", "")
+        self.sub = userinfo["sub"]
 
     def __str__(self):
         return self.username
@@ -122,8 +122,7 @@ class KeycloakRemoteUser(object):
         Get the full name (first name + last name) of the user.
         :return: the first name and last name of the user
         """
-        return "{first} {last}".format(first=self.first_name,
-                                       last=self.last_name)
+        return "{first} {last}".format(first=self.first_name, last=self.last_name)
 
     def get_short_name(self):
         """
@@ -146,8 +145,9 @@ class KeycloakRemoteUser(object):
         for backend in auth.get_backends():
             # Excluding Django.contrib.auth backends since they are not
             # compatible with non-db-backed permissions.
-            if hasattr(backend, "get_all_permissions") \
-                    and not backend.__module__.startswith('django.'):
+            if hasattr(
+                backend, "get_all_permissions"
+            ) and not backend.__module__.startswith("django."):
                 permissions.update(backend.get_all_permissions(self, obj))
         return permissions
 
@@ -171,8 +171,9 @@ class KeycloakRemoteUser(object):
         :return:
         """
         for backend in auth.get_backends():
-            if not hasattr(backend, 'has_perm') \
-                    or backend.__module__.startswith('django.contrib.auth'):
+            if not hasattr(backend, "has_perm") or backend.__module__.startswith(
+                "django.contrib.auth"
+            ):
                 continue
             try:
                 if backend.has_perm(self, perm, obj):
@@ -191,7 +192,7 @@ class KeycloakRemoteUser(object):
         :return:
         """
         for backend in auth.get_backends():
-            if not hasattr(backend, 'has_module_perms'):
+            if not hasattr(backend, "has_module_perms"):
                 continue
             try:
                 if backend.has_module_perms(self, module):
@@ -201,8 +202,10 @@ class KeycloakRemoteUser(object):
         return False
 
     def email_user(self, subject, message, from_email=None, **kwargs):
-        raise NotImplementedError('This feature is not implemented by default,'
-                                  ' extend this class to implement')
+        raise NotImplementedError(
+            "This feature is not implemented by default,"
+            " extend this class to implement"
+        )
 
     def save(self):
         """
@@ -210,4 +213,4 @@ class KeycloakRemoteUser(object):
         :raises NotImplementedError: to remind that this is not a
         database-backed model and should not be used like one
         """
-        raise NotImplementedError('This is not a database model')
+        raise NotImplementedError("This is not a database model")

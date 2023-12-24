@@ -1,5 +1,4 @@
-from django.contrib.auth import HASH_SESSION_KEY, BACKEND_SESSION_KEY, \
-    _get_backends
+from django.contrib.auth import HASH_SESSION_KEY, BACKEND_SESSION_KEY, _get_backends
 from django.contrib.auth.models import AnonymousUser
 from django.middleware.csrf import rotate_token
 from django.utils import timezone
@@ -9,7 +8,7 @@ import django_keycloak.services.oidc_profile
 
 # Using a different session key than the standard django.contrib.auth to
 # make sure there is no cross-referencing between UserModel and RemoteUserModel
-REMOTE_SESSION_KEY = '_auth_remote_user_id'
+REMOTE_SESSION_KEY = "_auth_remote_user_id"
 
 
 def _get_user_session_key(request):
@@ -26,12 +25,12 @@ def get_remote_user(request):
 
     user = None
 
-    OpenIdConnectProfile = django_keycloak.services.oidc_profile\
-        .get_openid_connect_profile_model()
+    OpenIdConnectProfile = (
+        django_keycloak.services.oidc_profile.get_openid_connect_profile_model()
+    )
 
     try:
-        oidc_profile = OpenIdConnectProfile.objects.get(
-            realm=request.realm, sub=sub)
+        oidc_profile = OpenIdConnectProfile.objects.get(realm=request.realm, sub=sub)
     except OpenIdConnectProfile.DoesNotExist:
         pass
     else:
@@ -51,7 +50,7 @@ def remote_user_login(request, user, backend=None):
     :param backend:
     :return:
     """
-    session_auth_hash = ''
+    session_auth_hash = ""
     if user is None:
         user = request.user
 
@@ -69,19 +68,19 @@ def remote_user_login(request, user, backend=None):
             _, backend = backends[0]
         else:
             raise ValueError(
-                'You have multiple authentication backends configured and '
-                'therefore must provide the `backend` argument or set the '
-                '`backend` attribute on the user.'
+                "You have multiple authentication backends configured and "
+                "therefore must provide the `backend` argument or set the "
+                "`backend` attribute on the user."
             )
 
-    if not hasattr(user, 'identifier'):
+    if not hasattr(user, "identifier"):
         raise ValueError(
-            'The user does not have an identifier or the identifier is empty.'
+            "The user does not have an identifier or the identifier is empty."
         )
 
     request.session[REMOTE_SESSION_KEY] = user.identifier
     request.session[BACKEND_SESSION_KEY] = backend
     request.session[HASH_SESSION_KEY] = session_auth_hash
-    if hasattr(request, 'user'):
+    if hasattr(request, "user"):
         request.user = user
     rotate_token(request)
